@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi Espacio · Matías</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#F0F2F5;color:#1F2937;font-size:14px;line-height:1.5}
+/* NAV */
+.nav{background:linear-gradient(135deg,#1F3864,#2E75B6);color:white;padding:0 20px;display:flex;align-items:center;gap:4px;height:52px;box-shadow:0 2px 8px rgba(31,56,100,.2);flex-wrap:wrap;position:sticky;top:0;z-index:100}
+.nav-brand{font-weight:700;font-size:16px;margin-right:12px;white-space:nowrap}
+.nav-btn{padding:6px 12px;border-radius:6px;border:none;background:transparent;color:rgba(255,255,255,.75);cursor:pointer;font-size:13px;font-weight:500;white-space:nowrap}
+.nav-btn:hover{background:rgba(255,255,255,.15);color:white}
+.nav-btn.active{background:rgba(255,255,255,.2);color:white;font-weight:700}
+.nav-spacer{flex:1}
+.nav-badge{background:#EF4444;color:white;border-radius:10px;font-size:10px;font-weight:700;padding:1px 5px;margin-left:3px}
+/* LAYOUT */
+.app{max-width:1100px;margin:0 auto;padding:20px 16px 60px}
+.card{background:white;border:1px solid #E5E7EB;border-radius:12px;padding:20px;margin-bottom:16px}
+.card-title{font-size:16px;font-weight:700;color:#1F3864;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:700px){.grid2,.grid3{grid-template-columns:1fr}}
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:7px;border:none;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600}
+.btn-primary{background:#1F3864;color:white}.btn-primary:hover{background:#2E75B6}
+.btn-success{background:#10B981;color:white}.btn-success:hover{background:#059669}
+.btn-secondary{background:white;border:1px solid #D1D5DB;color:#374151}.btn-secondary:hover{background:#F9FAFB}
+.btn-danger{background:#FEE2E2;color:#DC2626;border:1px solid #FECACA}.btn-danger:hover{background:#DC2626;color:white}
+.btn-sm{padding:5px 10px;font-size:12px}
+/* FORM */
+label{display:block;font-size:12px;font-weight:600;color:#374151;margin-bottom:4px}
+input[type=text],input[type=number],input[type=date],input[type=month],select,textarea{width:100%;padding:8px 10px;border:1px solid #D1D5DB;border-radius:7px;font-size:13px;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#2E75B6;box-shadow:0 0 0 2px rgba(46,117,182,.15)}
+textarea{resize:vertical;min-height:80px}
+.form-row{margin-bottom:12px}
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-3col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-box{background:white;border-radius:14px;padding:24px;max-width:540px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-box h3{font-size:17px;color:#1F3864;margin-bottom:16px}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+/* TOAST */
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:#1F2937;color:white;padding:10px 20px;border-radius:8px;font-size:13px;opacity:0;transition:all .25s;z-index:9999;pointer-events:none}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* TAGS/BADGES */
+.tag{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap}
+.tag-hogar{background:#FEF9C3;color:#713F12}
+.tag-salud{background:#D1FAE5;color:#065F46}
+.tag-familia{background:#FCE7F3;color:#831843}
+.tag-finanzas{background:#DBEAFE;color:#1E3A8A}
+.tag-aprendizaje{background:#EDE9FE;color:#4C1D95}
+.tag-idtifika{background:#FFEDD5;color:#7C2D12}
+.tag-gt{background:#F0FDF4;color:#14532D}
+.tag-personal{background:#F1F5F9;color:#475569}
+.tag-alta{background:#FEE2E2;color:#DC2626}
+.tag-media{background:#FEF3C7;color:#D97706}
+.tag-baja{background:#D1FAE5;color:#059669}
+/* PROGRESS BAR */
+.progress-wrap{background:#F3F4F6;border-radius:8px;height:8px;overflow:hidden}
+.progress-fill{height:100%;border-radius:8px;transition:width .4s}
+/* DASH STAT */
+.stat-card{background:white;border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px}
+.stat-val{font-size:26px;font-weight:800;color:#1F3864}
+.stat-lbl{font-size:12px;color:#6B7280;margin-top:2px}
+/* TAREAS */
+.tarea-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:white;border:1px solid #E5E7EB;border-radius:8px;margin-bottom:7px;transition:box-shadow .15s}
+.tarea-item:hover{box-shadow:0 2px 8px rgba(0,0,0,.07)}
+.tarea-item.alta{border-left:4px solid #EF4444}
+.tarea-item.media{border-left:4px solid #F59E0B}
+.tarea-item.baja{border-left:4px solid #10B981}
+.tarea-item.done{opacity:.5}
+.tarea-item.done .tarea-titulo{text-decoration:line-through;color:#9CA3AF}
+.tarea-titulo{font-size:13.5px;font-weight:600;color:#1F2937}
+.tarea-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px;align-items:center}
+.tarea-check{width:17px;height:17px;cursor:pointer;accent-color:#10B981;flex-shrink:0;margin-top:2px}
+.due-today{color:#D97706;font-size:11px;font-weight:600}
+.due-past{color:#DC2626;font-size:11px;font-weight:600}
+.due-future{color:#6B7280;font-size:11px}
+/* HABITOS */
+.habito-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:white;border:1px solid #E5E7EB;border-radius:9px;margin-bottom:8px}
+.habito-check-btn{width:32px;height:32px;border-radius:50%;border:2px solid #D1D5DB;background:white;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.habito-check-btn.done{background:#10B981;border-color:#10B981;color:white}
+.habito-nombre{font-size:13.5px;font-weight:600;flex:1}
+.habito-streak{font-size:11px;color:#F59E0B;font-weight:700}
+.streak-flame{font-size:14px}
+/* METAS */
+.meta-card{background:white;border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.meta-titulo{font-size:14px;font-weight:700;color:#1F2937;margin-bottom:8px}
+.meta-prog-num{font-size:13px;font-weight:700;color:#2E75B6}
+.hito-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:12.5px;color:#4B5563}
+.hito-check{width:15px;height:15px;accent-color:#10B981;cursor:pointer}
+.hito-done{text-decoration:line-through;color:#9CA3AF}
+/* DIARIO */
+.diario-entry{background:white;border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:box-shadow .15s}
+.diario-entry:hover{box-shadow:0 3px 10px rgba(0,0,0,.08)}
+.diario-fecha{font-size:12px;color:#6B7280;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.diario-preview{font-size:13px;color:#374151;line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.mood-btn{padding:5px 10px;border-radius:20px;border:1px solid #E5E7EB;background:white;cursor:pointer;font-size:18px;transition:all .15s}
+.mood-btn.active{border-color:#2E75B6;background:#EFF6FF;transform:scale(1.1)}
+/* FINANZAS */
+.fin-row{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-bottom:1px solid #F3F4F6;font-size:13px}
+.fin-row:last-child{border-bottom:none}
+.fin-ingreso{color:#059669;font-weight:700}
+.fin-gasto{color:#DC2626;font-weight:700}
+.fin-stat{background:white;border:1px solid #E5E7EB;border-radius:9px;padding:12px 16px;text-align:center}
+.fin-stat-val{font-size:22px;font-weight:800}
+.fin-stat-lbl{font-size:11px;color:#6B7280;margin-top:2px}
+/* TIME BLOCKING */
+.tb-wrap{display:flex;height:600px;border:1px solid #E5E7EB;border-radius:10px;overflow:hidden;background:white}
+.tb-left{width:220px;border-right:1px solid #E5E7EB;overflow-y:auto;flex-shrink:0}
+.tb-left-title{font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.05em;padding:10px 12px 6px;border-bottom:1px solid #F3F4F6}
+.tb-task{display:flex;align-items:center;gap:6px;padding:8px 10px;border-bottom:1px solid #F9FAFB;cursor:grab;font-size:12px}
+.tb-task:hover{background:#F9FAFB}
+.tb-task.alta{border-left:3px solid #EF4444}.tb-task.media{border-left:3px solid #F59E0B}.tb-task.baja{border-left:3px solid #10B981}
+.tb-right{flex:1;overflow-y:auto;position:relative}
+.tb-timeline{position:relative;margin-left:54px;margin-right:6px}
+.tb-slot{position:absolute;left:0;right:0;height:48px}
+.tb-slot-hour{border-top:1px solid #E5E7EB}
+.tb-slot-half{border-top:1px dashed #F3F4F6}
+.tb-slot.drop-over{background:rgba(46,117,182,.06)}
+.tb-lbl{position:absolute;left:-50px;top:4px;font-size:10.5px;color:#9CA3AF;font-weight:600;width:44px;text-align:right}
+.tb-slot-hit{position:absolute;inset:0;cursor:pointer}
+.tb-slot-hit:hover::after{content:"+";font-size:16px;color:#CBD5E1;display:flex;align-items:center;justify-content:center;height:100%}
+.tb-slot-hit:hover{background:rgba(46,117,182,.04)}
+.tb-block{position:absolute;left:2px;right:2px;border-radius:7px;padding:5px 8px;cursor:pointer;overflow:hidden;z-index:2;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.tb-block:hover{z-index:3;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.tb-block.dragging{opacity:.3}
+.tb-block-title{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tb-block-time{font-size:10px;opacity:.65;margin-top:1px}
+.tb-block-x{position:absolute;top:3px;right:4px;background:none;border:none;cursor:pointer;font-size:11px;opacity:0;color:inherit;padding:1px 3px}
+.tb-block:hover .tb-block-x{opacity:.6}
+.tb-block-x:hover{opacity:1!important}
+.tb-new{position:absolute;left:2px;right:2px;background:white;border:2px dashed #2E75B6;border-radius:7px;padding:6px 8px;z-index:10;display:flex;gap:5px;align-items:center;flex-wrap:wrap;box-shadow:0 4px 14px rgba(0,0,0,.12)}
+.tb-new input{flex:1;min-width:80px;padding:4px 7px;border:1px solid #D1D5DB;border-radius:5px;font-size:12px;font-family:inherit}
+.tb-new select{padding:4px 5px;border:1px solid #D1D5DB;border-radius:5px;font-size:11px;font-family:inherit}
+.tb-new button{padding:3px 8px;border-radius:5px;border:none;font-size:11px;cursor:pointer}
+.tb-nav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.tb-nav button{padding:5px 10px;border:1px solid #D1D5DB;background:white;border-radius:6px;cursor:pointer;font-size:13px}
+.tb-nav .lbl{font-size:15px;font-weight:700;color:#1F3864}
+.toggle-row{display:flex;background:#F3F4F6;border-radius:7px;padding:2px;gap:2px}
+.toggle-row button{padding:5px 12px;border:none;background:none;border-radius:5px;font-size:12px;cursor:pointer;color:#6B7280;font-weight:600}
+.toggle-row button.active{background:white;color:#1F3864;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+/* FILTROS */
+.filter-pill{padding:5px 12px;border-radius:20px;border:1px solid #E5E7EB;background:white;font-size:12px;font-weight:600;color:#6B7280;cursor:pointer}
+.filter-pill.active{background:#1F3864;color:white;border-color:#1F3864}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+/* SECTION HEADER */
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+/* EMPTY */
+.empty{text-align:center;padding:32px;color:#9CA3AF;font-size:13px}
+</style>
+</head>
+<body>
+<nav class="nav" id="nav"></nav>
+<div class="app" id="mainView"></div>
+<div id="modalRoot"></div>
+<div id="toast"></div>
+<script>
+// ── CONSTANTES ──────────────────────────────────────────────
+const STORAGE_KEY = "matias_personal_v1";
+const CATS = [
+  {k:"personal",  l:"👤 Personal",   cls:"tag-personal"},
+  {k:"hogar",     l:"🏠 Hogar",       cls:"tag-hogar"},
+  {k:"salud",     l:"💪 Salud",       cls:"tag-salud"},
+  {k:"familia",   l:"👨‍👩‍👧 Familia",    cls:"tag-familia"},
+  {k:"finanzas",  l:"💰 Finanzas",    cls:"tag-finanzas"},
+  {k:"aprender",  l:"📚 Aprendizaje", cls:"tag-aprendizaje"},
+  {k:"idtifika",  l:"🐾 IDtifika Pets",cls:"tag-idtifika"},
+  {k:"gt",        l:"🏭 GT Industries",cls:"tag-gt"},
+];
+const MOODS = [{k:"excelente",e:"🤩"},{k:"bien",e:"😊"},{k:"neutral",e:"😐"},{k:"mal",e:"😔"},{k:"terrible",e:"😩"}];
+const TB_START=8,TB_END=21,TB_SH=48,TB_SLOTS=(TB_END-TB_START)*2;
+const BLOCK_COLORS={
+  azul:{bg:"#EFF6FF",bd:"#2E75B6",tx:"#1E3A8A"},
+  verde:{bg:"#F0FDF4",bd:"#16A34A",tx:"#14532D"},
+  amarillo:{bg:"#FFFBEB",bd:"#F59E0B",tx:"#713F12"},
+  rojo:{bg:"#FFF1F2",bd:"#EF4444",tx:"#7F1D1D"},
+  morado:{bg:"#F5F3FF",bd:"#7C3AED",tx:"#4C1D95"},
+  gris:{bg:"#F9FAFB",bd:"#9CA3AF",tx:"#374151"},
+};
+
+// ── STORE ───────────────────────────────────────────────────
+function loadStore(){
+  try{
+    const r=localStorage.getItem(STORAGE_KEY);
+    if(!r)return defStore();
+    const p=JSON.parse(r);
+    if(!p.tareas)p.tareas=[];
+    if(!p.habitos)p.habitos=[];
+    if(!p.habRegistros)p.habRegistros={};
+    if(!p.metas)p.metas=[];
+    if(!p.diario)p.diario=[];
+    if(!p.finanzas)p.finanzas=[];
+    if(!p.timeblocks)p.timeblocks={};
+    return p;
+  }catch(e){return defStore();}
+}
+function defStore(){return{tareas:[],habitos:[],habRegistros:{},metas:[],diario:[],finanzas:[],timeblocks:{}};}
+function saveStore(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(store));}catch(e){alert("Error guardando");}}
+let store=loadStore();
+function newId(p="i"){return p+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
+
+// ── STATE ───────────────────────────────────────────────────
+const state={
+  view:"dashboard",
+  tFiltro:"todas",tOrden:"prioridad",tVista:"lista",tCat:"todas",
+  tbDate:new Date().toISOString().slice(0,10),tbNew:null,tbDrag:null,
+  habDate:new Date().toISOString().slice(0,10),
+  finMes:new Date().toISOString().slice(0,7),
+  diarioBusca:"",
+};
+
+// ── HELPERS ─────────────────────────────────────────────────
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[m]);}
+function today(){return new Date().toISOString().slice(0,10);}
+function fmt(d){if(!d)return"";try{return new Date(d+"T12:00:00").toLocaleDateString("es-CL",{day:"numeric",month:"short"});}catch(e){return d;}}
+function fmtFull(d){if(!d)return"";try{return new Date(d+"T12:00:00").toLocaleDateString("es-CL",{weekday:"long",day:"numeric",month:"long",year:"numeric"});}catch(e){return d;}}
+function catTag(k){const c=CATS.find(x=>x.k===k);return c?`<span class="tag ${c.cls}">${c.l}</span>`:""}
+function prioTag(p){return`<span class="tag tag-${p}">${{alta:"🔴 Alta",media:"🟡 Media",baja:"🟢 Baja"}[p]||p}</span>`}
+function toast(m){const t=document.getElementById("toast");t.textContent=m;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1800);}
+function closeModal(){document.getElementById("modalRoot").innerHTML="";}
+function slotToTime(s){const h=TB_START+Math.floor(s/2);return`${String(h).padStart(2,"0")}:${s%2===0?"00":"30"}`;}
+function getTB(){if(!store.timeblocks)store.timeblocks={};return store.timeblocks[state.tbDate]||[];}
+function saveTB(b){if(!store.timeblocks)store.timeblocks={};store.timeblocks[state.tbDate]=b;saveStore();}
+
+// ── NAVIGATION ──────────────────────────────────────────────
+const VIEWS=[
+  {k:"dashboard",l:"🏠 Inicio"},
+  {k:"tareas",l:"✅ Tareas"},
+  {k:"habitos",l:"💪 Hábitos"},
+  {k:"metas",l:"🎯 Metas"},
+  {k:"diario",l:"📓 Diario"},
+  {k:"finanzas",l:"💰 Finanzas"},
+];
+function goTo(v){state.view=v;render();window.scrollTo({top:0,behavior:"smooth"});}
+function renderNav(){
+  const pend=(store.tareas||[]).filter(t=>t.estado!=="completada"&&t.due_date&&t.due_date<=today()).length;
+  document.getElementById("nav").innerHTML=`
+    <span class="nav-brand">✦ Mi Espacio</span>
+    ${VIEWS.map(v=>`<button class="nav-btn ${state.view===v.k?"active":""}" onclick="goTo('${v.k}')">${v.l}${v.k==="tareas"&&pend>0?`<span class="nav-badge">${pend}</span>`:""}</button>`).join("")}
+    <span class="nav-spacer"></span>
+    <button class="nav-btn" onclick="exportar()" title="Guardar respaldo">💾</button>
+    <label class="nav-btn" style="cursor:pointer" title="Cargar respaldo">📥<input type="file" accept=".json" style="display:none" onchange="importar(event)"></label>`;
+}
+
+// ── DASHBOARD ───────────────────────────────────────────────
+function renderDashboard(){
+  const td=today();
+  const tareasPend=(store.tareas||[]).filter(t=>t.estado!=="completada");
+  const vencidas=tareasPend.filter(t=>t.due_date&&t.due_date<td);
+  const hoy=tareasPend.filter(t=>t.due_date===td);
+  // Hábitos hoy
+  const reg=store.habRegistros[td]||{};
+  const habHoy=(store.habitos||[]).filter(h=>habitoAplica(h,td));
+  const habDone=habHoy.filter(h=>reg[h.id]);
+  // Metas activas
+  const metas=(store.metas||[]).filter(m=>m.estado!=="completada");
+  // Finanzas mes actual
+  const mes=new Date().toISOString().slice(0,7);
+  const movMes=(store.finanzas||[]).filter(m=>m.fecha&&m.fecha.startsWith(mes));
+  const ingresos=movMes.filter(m=>m.tipo==="ingreso").reduce((a,m)=>a+Number(m.monto),0);
+  const gastos=movMes.filter(m=>m.tipo==="gasto").reduce((a,m)=>a+Number(m.monto),0);
+  // Últimas tareas urgentes
+  const urgentes=[...vencidas,...hoy].slice(0,5);
+  const greeting=()=>{const h=new Date().getHours();if(h<12)return"Buenos días";if(h<19)return"Buenas tardes";return"Buenas noches";};
+  document.getElementById("mainView").innerHTML=`
+    <div style="background:linear-gradient(135deg,#1F3864,#2E75B6);color:white;border-radius:14px;padding:22px 24px;margin-bottom:20px">
+      <div style="font-size:20px;font-weight:700;margin-bottom:4px">${greeting()}, Matías 👋</div>
+      <div style="opacity:.85;font-size:14px">${fmtFull(td)}</div>
+    </div>
+    <div class="grid3" style="margin-bottom:16px">
+      <div class="stat-card" style="cursor:pointer" onclick="goTo('tareas')">
+        <div class="stat-val" style="color:${vencidas.length>0?"#DC2626":"#1F3864"}">${tareasPend.length}</div>
+        <div class="stat-lbl">Tareas pendientes${vencidas.length>0?` · <span style="color:#DC2626">${vencidas.length} vencida(s)</span>`:""}</div>
+      </div>
+      <div class="stat-card" style="cursor:pointer" onclick="goTo('habitos')">
+        <div class="stat-val" style="color:#10B981">${habDone.length}/${habHoy.length}</div>
+        <div class="stat-lbl">Hábitos completados hoy</div>
+      </div>
+      <div class="stat-card" style="cursor:pointer" onclick="goTo('finanzas')">
+        <div class="stat-val" style="color:#10B981">+$${ingresos.toLocaleString("es-CL")}</div>
+        <div class="stat-lbl">Ingresos este mes · gastos $${gastos.toLocaleString("es-CL")}</div>
+      </div>
+    </div>
+    <div class="grid2">
+      <div>
+        <div class="card">
+          <div class="card-title">🔥 Urgente / Hoy</div>
+          ${urgentes.length===0?`<div class="empty">Sin tareas urgentes 🎉</div>`:urgentes.map(t=>`
+            <div class="tarea-item ${t.prioridad} ${t.estado==="completada"?"done":""}">
+              <input type="checkbox" class="tarea-check" ${t.estado==="completada"?"checked":""} onchange="toggleTarea('${t.id}')">
+              <div><div class="tarea-titulo">${esc(t.titulo)}</div>
+              <div class="tarea-meta">${catTag(t.categoria)}${t.due_date?`<span class="${t.due_date<td?"due-past":t.due_date===td?"due-today":"due-future"}">📅 ${fmt(t.due_date)}</span>`:""}</div></div>
+            </div>`).join("")}
+          <button class="btn btn-primary btn-sm" style="margin-top:10px" onclick="goTo('tareas')">Ver todas →</button>
+        </div>
+        <div class="card">
+          <div class="card-title">💪 Hábitos de hoy</div>
+          ${habHoy.length===0?`<div class="empty">Sin hábitos configurados</div>`:habHoy.map(h=>{
+            const done=reg[h.id];
+            const streak=calcStreak(h.id,td);
+            return`<div class="habito-row">
+              <button class="habito-check-btn ${done?"done":""}" onclick="toggleHabito('${h.id}')">${done?"✓":""}</button>
+              <span class="habito-nombre">${esc(h.nombre)}</span>
+              ${streak>1?`<span class="habito-streak"><span class="streak-flame">🔥</span>${streak}</span>`:""}
+              ${catTag(h.categoria)}
+            </div>`;}).join("")}
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">🎯 Metas activas</div>
+          ${metas.length===0?`<div class="empty">Sin metas aún</div>`:metas.slice(0,4).map(m=>`
+            <div style="margin-bottom:12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+                <span style="font-size:13px;font-weight:600">${esc(m.titulo)}</span>
+                <span class="meta-prog-num">${m.progreso||0}%</span>
+              </div>
+              <div class="progress-wrap"><div class="progress-fill" style="width:${m.progreso||0}%;background:${(m.progreso||0)>=100?"#10B981":(m.progreso||0)>=50?"#2E75B6":"#F59E0B"}"></div></div>
+              ${m.fecha_objetivo?`<div style="font-size:11px;color:#9CA3AF;margin-top:3px">📅 ${fmt(m.fecha_objetivo)}</div>`:""}
+            </div>`).join("")}
+          <button class="btn btn-secondary btn-sm" style="margin-top:4px" onclick="goTo('metas')">Ver metas →</button>
+        </div>
+        <div class="card">
+          <div class="card-title">📓 Último diario</div>
+          ${(()=>{const last=[...(store.diario||[])].sort((a,b)=>b.fecha.localeCompare(a.fecha))[0];
+            if(!last)return`<div class="empty">Sin entradas aún</div>`;
+            const mood=MOODS.find(m=>m.k===last.mood);
+            return`<div class="diario-entry" onclick="goTo('diario')">
+              <div class="diario-fecha">${fmtFull(last.fecha)} ${mood?mood.e:""}</div>
+              <div class="diario-preview">${esc(last.contenido)}</div>
+            </div>`})()}
+          <button class="btn btn-secondary btn-sm" style="margin-top:6px" onclick="abrirDiarioHoy()">Escribir hoy →</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── TAREAS ──────────────────────────────────────────────────
+function renderTareas(){
+  if(state.tVista==="tb"){renderTB();return;}
+  const td=today();
+  let list=[...(store.tareas||[])];
+  if(state.tFiltro==="pendientes")list=list.filter(t=>t.estado!=="completada");
+  else if(state.tFiltro==="completadas")list=list.filter(t=>t.estado==="completada");
+  else if(state.tFiltro==="hoy")list=list.filter(t=>t.due_date===td);
+  else if(state.tFiltro==="vencidas")list=list.filter(t=>t.estado!=="completada"&&t.due_date&&t.due_date<td);
+  if(state.tCat!=="todas")list=list.filter(t=>t.categoria===state.tCat);
+  const PV={alta:0,media:1,baja:2};
+  list.sort((a,b)=>{
+    if(state.tOrden==="prioridad"){const p=(PV[a.prioridad]??1)-(PV[b.prioridad]??1);if(p)return p;if(a.due_date&&b.due_date)return a.due_date.localeCompare(b.due_date);return(a.due_date?-1:1);}
+    if(state.tOrden==="fecha"){if(a.due_date&&b.due_date)return a.due_date.localeCompare(b.due_date);return a.due_date?-1:1;}
+    if(state.tOrden==="az")return a.titulo.localeCompare(b.titulo,"es");
+    return 0;
+  });
+  const catFiltros=[{k:"todas",l:"Todas"},...CATS.map(c=>({k:c.k,l:c.l}))];
+  document.getElementById("mainView").innerHTML=`
+    <div class="card">
+      <div class="section-header">
+        <h2 style="font-size:17px;color:#1F3864">✅ Tareas</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <div class="toggle-row"><button class="active">📋 Lista</button><button onclick="state.tVista='tb';renderTareas()">📅 Day Plan</button></div>
+          <button class="btn btn-primary" onclick="modalTarea()">+ Nueva</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        ${["todas","pendientes","hoy","vencidas","completadas"].map(f=>`<button class="filter-pill ${state.tFiltro===f?"active":""}" onclick="state.tFiltro='${f}';renderTareas()">${{todas:"Todas",pendientes:"Pendientes",hoy:"Hoy",vencidas:"⚠️ Vencidas",completadas:"Completadas"}[f]}</button>`).join("")}
+        <select style="padding:5px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:12px;font-family:inherit" onchange="state.tOrden=this.value;renderTareas()">
+          <option value="prioridad" ${state.tOrden==="prioridad"?"selected":""}>↕ Prioridad</option>
+          <option value="fecha" ${state.tOrden==="fecha"?"selected":""}>📅 Fecha</option>
+          <option value="az" ${state.tOrden==="az"?"selected":""}>A→Z</option>
+        </select>
+      </div>
+      <div class="filters">
+        ${catFiltros.map(c=>`<button class="filter-pill ${state.tCat===c.k?"active":""}" onclick="state.tCat='${c.k}';renderTareas()">${c.l}</button>`).join("")}
+      </div>
+      ${list.length===0?`<div class="empty">Sin tareas en este filtro</div>`:list.map(t=>`
+        <div class="tarea-item ${t.prioridad} ${t.estado==="completada"?"done":""}">
+          <input type="checkbox" class="tarea-check" ${t.estado==="completada"?"checked":""} onchange="toggleTarea('${t.id}')">
+          <div style="flex:1">
+            <div class="tarea-titulo">${esc(t.titulo)}</div>
+            ${t.desc?`<div style="font-size:12px;color:#6B7280;margin-top:2px">${esc(t.desc)}</div>`:""}
+            <div class="tarea-meta">
+              ${prioTag(t.prioridad)}${catTag(t.categoria)}
+              ${t.due_date?`<span class="${t.due_date<td&&t.estado!=="completada"?"due-past":t.due_date===td?"due-today":"due-future"}">📅 ${fmt(t.due_date)}</span>`:""}
+            </div>
+          </div>
+          <div style="display:flex;gap:4px">
+            <button class="btn btn-secondary btn-sm" onclick="modalTarea('${t.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="delTarea('${t.id}')">🗑</button>
+          </div>
+        </div>`).join("")}
+    </div>`;
+}
+function toggleTarea(id){
+  const t=(store.tareas||[]).find(x=>x.id===id);if(!t)return;
+  t.estado=t.estado==="completada"?"pendiente":"completada";t.updatedAt=Date.now();
+  saveStore();renderTareas();
+}
+function delTarea(id){if(!confirm("¿Eliminar tarea?"))return;store.tareas=store.tareas.filter(x=>x.id!==id);saveStore();toast("Tarea eliminada");renderTareas();}
+function modalTarea(id){
+  const t=id?(store.tareas||[]).find(x=>x.id===id):null;
+  const isEdit=!!t;
+  const catOpts=CATS.map(c=>`<option value="${c.k}" ${(t?.categoria||"personal")===c.k?"selected":""}>${c.l}</option>`).join("");
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box">
+        <h3>${isEdit?"Editar tarea":"Nueva tarea"}</h3>
+        <div class="form-row"><label>Título *</label><input type="text" id="mtTit" value="${esc(t?.titulo||"")}" placeholder="¿Qué hay que hacer?"></div>
+        <div class="form-row"><label>Descripción</label><textarea id="mtDesc" style="min-height:60px">${esc(t?.desc||"")}</textarea></div>
+        <div class="form-3col">
+          <div class="form-row" style="margin:0"><label>Prioridad</label><select id="mtPrio"><option value="alta" ${(t?.prioridad||"media")==="alta"?"selected":""}>🔴 Alta</option><option value="media" ${(t?.prioridad||"media")==="media"?"selected":""}>🟡 Media</option><option value="baja" ${(t?.prioridad||"media")==="baja"?"selected":""}>🟢 Baja</option></select></div>
+          <div class="form-row" style="margin:0"><label>Categoría</label><select id="mtCat">${catOpts}</select></div>
+          <div class="form-row" style="margin:0"><label>Fecha límite</label><input type="date" id="mtDue" value="${esc(t?.due_date||"")}"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveTarea('${id||""}')">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+}
+function saveTarea(id){
+  const tit=document.getElementById("mtTit")?.value?.trim();
+  if(!tit){toast("El título es obligatorio");return;}
+  if(id){
+    const t=(store.tareas||[]).find(x=>x.id===id);if(!t)return;
+    t.titulo=tit;t.desc=document.getElementById("mtDesc")?.value?.trim()||"";
+    t.prioridad=document.getElementById("mtPrio")?.value||"media";
+    t.categoria=document.getElementById("mtCat")?.value||"personal";
+    t.due_date=document.getElementById("mtDue")?.value||"";t.updatedAt=Date.now();
+  }else{
+    if(!store.tareas)store.tareas=[];
+    store.tareas.unshift({id:newId("t"),titulo:tit,desc:document.getElementById("mtDesc")?.value?.trim()||"",
+      prioridad:document.getElementById("mtPrio")?.value||"media",categoria:document.getElementById("mtCat")?.value||"personal",
+      due_date:document.getElementById("mtDue")?.value||"",estado:"pendiente",createdAt:Date.now()});
+  }
+  saveStore();closeModal();toast("✓ Tarea guardada");renderTareas();
+}
+
+// ── TIME BLOCKING ───────────────────────────────────────────
+function renderTB(){
+  const td=today();const isToday=state.tbDate===td;
+  const blocks=getTB();
+  const assigned=new Set(blocks.filter(b=>b.tarea_id).map(b=>String(b.tarea_id)));
+  const unsch=(store.tareas||[]).filter(t=>t.estado!=="completada"&&!assigned.has(String(t.id)));
+  const occupied=new Set();
+  blocks.forEach(b=>{for(let i=1;i<b.duracion_slots;i++)occupied.add(b.slot_inicio+i);});
+  const totalH=TB_SLOTS*TB_SH;
+  const slots=Array.from({length:TB_SLOTS},(_,i)=>{
+    const isHour=i%2===0;const y=i*TB_SH;
+    const block=blocks.find(b=>b.slot_inicio===i);const isOcc=occupied.has(i)&&!block;
+    let inner="";
+    if(state.tbNew===i){
+      inner=`<div class="tb-new" style="top:${y+2}px;min-height:${TB_SH*2-4}px">
+        <input type="text" id="tbNT" placeholder="Nombre..." onkeydown="if(event.key==='Enter')tbSave();if(event.key==='Escape')tbCancel()">
+        <select id="tbND"><option value="1">30m</option><option value="2" selected>1h</option><option value="3">1.5h</option><option value="4">2h</option><option value="6">3h</option></select>
+        <select id="tbNC"><option value="azul">🔵</option><option value="verde">🟢</option><option value="amarillo">🟡</option><option value="rojo">🔴</option><option value="morado">🟣</option></select>
+        <button onclick="tbSave()" style="background:#2E75B6;color:white">✓</button>
+        <button onclick="tbCancel()" style="background:#F3F4F6">✕</button>
+      </div>`;return inner;
+    }
+    if(block){
+      const c=BLOCK_COLORS[block.color]||BLOCK_COLORS.azul;
+      const h=block.duracion_slots*TB_SH-4;const end=slotToTime(Math.min(block.slot_inicio+block.duracion_slots,TB_SLOTS));
+      inner=`<div class="tb-block" id="tbb_${block.id}" style="top:${y+2}px;height:${h}px;background:${c.bg};border:1.5px solid ${c.bd};color:${c.tx}"
+        draggable="true" ondragstart="tbBDS(event,'${block.id}')" ondragend="tbDE()" onclick="tbEdit('${block.id}')">
+        <button class="tb-block-x" onclick="event.stopPropagation();tbDel('${block.id}')">✕</button>
+        <div class="tb-block-title">${esc(block.titulo)}</div>
+        ${h>36?`<div class="tb-block-time">${slotToTime(block.slot_inicio)}–${end}</div>`:""}
+      </div>`;return inner;
+    }
+    return`<div class="tb-slot ${isHour?"tb-slot-hour":"tb-slot-half"}" style="top:${y}px" id="tbs_${i}"
+      ondragover="tbDO(event,${i})" ondragleave="this.classList.remove('drop-over')" ondrop="tbDP(event,${i})">
+      ${isHour?`<span class="tb-lbl">${slotToTime(i)}</span>`:""}
+      ${isOcc?"":isHour||true?`<div class="tb-slot-hit" onclick="state.tbNew=${i};renderTareas()"></div>`:""}
+    </div>`;
+  });
+  const dateLabel=isToday?`Hoy · ${new Date(state.tbDate+"T12:00").toLocaleDateString("es-CL",{weekday:"long",day:"numeric",month:"long"})}`:
+    new Date(state.tbDate+"T12:00").toLocaleDateString("es-CL",{weekday:"long",day:"numeric",month:"long"});
+  document.getElementById("mainView").innerHTML=`
+    <div class="card" style="padding:0;overflow:hidden">
+      <div style="padding:12px 16px;border-bottom:1px solid #E5E7EB;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+        <div class="tb-nav" style="margin:0">
+          <button onclick="tbPrev()">←</button>
+          <span class="lbl">${esc(dateLabel)}</span>
+          <button onclick="tbNext()">→</button>
+          ${!isToday?`<button onclick="tbHoy()" style="background:#EFF6FF;border-color:#2E75B6;color:#1D4ED8;font-weight:600">Hoy</button>`:""}
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-size:12px;color:#9CA3AF">Clic en slot o arrastrá tarea</span>
+          <div class="toggle-row"><button onclick="state.tVista='lista';renderTareas()">📋 Lista</button><button class="active">📅 Day Plan</button></div>
+        </div>
+      </div>
+      <div class="tb-wrap" style="border:none;border-radius:0">
+        <div class="tb-left">
+          <div class="tb-left-title">Tareas pendientes</div>
+          ${unsch.length===0?`<div style="color:#9CA3AF;font-size:12px;padding:12px;text-align:center">¡Todo asignado! 🎉</div>`:
+            unsch.map(t=>`<div class="tb-task ${t.prioridad}" id="tbt_${t.id}" draggable="true"
+              ondragstart="tbTDS(event,'${t.id}')" ondragend="tbDE()">
+              <span style="color:#D1D5DB;font-size:13px">⠿</span>
+              <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.titulo)}</span>
+            </div>`).join("")}
+        </div>
+        <div class="tb-right">
+          <div class="tb-timeline" style="height:${totalH}px;position:relative">
+            ${slots.join("")}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  if(state.tbNew!==null)setTimeout(()=>{const i=document.getElementById("tbNT");if(i)i.focus();},60);
+}
+function tbPrev(){const d=new Date(state.tbDate+"T12:00");d.setDate(d.getDate()-1);state.tbDate=d.toISOString().slice(0,10);state.tbNew=null;renderTareas();}
+function tbNext(){const d=new Date(state.tbDate+"T12:00");d.setDate(d.getDate()+1);state.tbDate=d.toISOString().slice(0,10);state.tbNew=null;renderTareas();}
+function tbHoy(){state.tbDate=today();state.tbNew=null;renderTareas();}
+function tbSave(tid){
+  const tit=(document.getElementById("tbNT")||{}).value?.trim();if(!tit){toast("Escribe un nombre");return;}
+  const dur=parseInt((document.getElementById("tbND")||{}).value||"2");
+  const color=(document.getElementById("tbNC")||{}).value||"azul";
+  const b=getTB();
+  b.push({id:newId("tb"),slot_inicio:state.tbNew,duracion_slots:dur,titulo:tit,tarea_id:tid||null,color});
+  saveTB(b);state.tbNew=null;renderTareas();
+}
+function tbCancel(){state.tbNew=null;renderTareas();}
+function tbDel(id){if(!confirm("¿Eliminar bloque?"))return;saveTB(getTB().filter(b=>b.id!==id));toast("Eliminado");renderTareas();}
+function tbEdit(id){
+  const blk=getTB().find(b=>b.id===id);if(!blk)return;
+  const so=Array.from({length:TB_SLOTS},(_,i)=>`<option value="${i}" ${i===blk.slot_inicio?"selected":""}>${slotToTime(i)}</option>`).join("");
+  const durOpts=[[1,"30m"],[2,"1h"],[3,"1.5h"],[4,"2h"],[5,"2.5h"],[6,"3h"]].map(([v,l])=>`<option value="${v}" ${blk.duracion_slots===v?"selected":""}>${l}</option>`).join("");
+  const colOpts=Object.keys(BLOCK_COLORS).map(k=>`<option value="${k}" ${blk.color===k?"selected":""}>${k}</option>`).join("");
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box" style="max-width:420px">
+        <h3>✏️ Editar bloque</h3>
+        <div class="form-row"><label>Nombre</label><input type="text" id="tbeT" value="${esc(blk.titulo)}" style="width:100%;padding:8px;border:1px solid #D1D5DB;border-radius:7px;font-size:14px;font-family:inherit"></div>
+        <div class="form-3col">
+          <div class="form-row" style="margin:0"><label>Inicio</label><select id="tbeS" style="width:100%;padding:6px;border:1px solid #D1D5DB;border-radius:6px;font-size:12px;font-family:inherit">${so}</select></div>
+          <div class="form-row" style="margin:0"><label>Duración</label><select id="tbeD" style="width:100%;padding:6px;border:1px solid #D1D5DB;border-radius:6px;font-size:12px;font-family:inherit">${durOpts}</select></div>
+          <div class="form-row" style="margin:0"><label>Color</label><select id="tbeC" style="width:100%;padding:6px;border:1px solid #D1D5DB;border-radius:6px;font-size:12px;font-family:inherit">${colOpts}</select></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger btn-sm" onclick="tbDel('${id}');closeModal()">Eliminar</button>
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="tbSaveEdit('${id}')">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+}
+function tbSaveEdit(id){
+  const b=getTB();const blk=b.find(x=>x.id===id);if(!blk)return;
+  blk.titulo=(document.getElementById("tbeT")||{}).value?.trim()||blk.titulo;
+  blk.slot_inicio=parseInt((document.getElementById("tbeS")||{}).value);
+  blk.duracion_slots=parseInt((document.getElementById("tbeD")||{}).value);
+  blk.color=(document.getElementById("tbeC")||{}).value||blk.color;
+  saveTB(b);closeModal();renderTareas();
+}
+let _tbDrag=null;
+function tbTDS(e,id){_tbDrag={type:"task",id};e.dataTransfer.effectAllowed="copy";e.dataTransfer.setData("text/plain",id);setTimeout(()=>{const el=document.getElementById("tbt_"+id);if(el)el.style.opacity=".3";},0);}
+function tbBDS(e,id){_tbDrag={type:"block",id};e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",id);setTimeout(()=>{const el=document.getElementById("tbb_"+id);if(el)el.classList.add("dragging");},0);}
+function tbDE(){_tbDrag=null;document.querySelectorAll(".dragging").forEach(el=>el.classList.remove("dragging"));document.querySelectorAll("[id^='tbt_']").forEach(el=>el.style.opacity="");document.querySelectorAll(".drop-over").forEach(el=>el.classList.remove("drop-over"));}
+function tbDO(e,slot){if(!_tbDrag)return;e.preventDefault();document.querySelectorAll(".drop-over").forEach(el=>el.classList.remove("drop-over"));document.getElementById("tbs_"+slot)?.classList.add("drop-over");}
+function tbDP(e,slot){
+  e.preventDefault();if(!_tbDrag)return;
+  if(_tbDrag.type==="task"){
+    const task=(store.tareas||[]).find(t=>String(t.id)===String(_tbDrag.id));if(!task){tbDE();return;}
+    const b=getTB();const col={alta:"rojo",media:"azul",baja:"verde"}[task.prioridad]||"azul";
+    b.push({id:newId("tb"),slot_inicio:slot,duracion_slots:2,titulo:task.titulo,tarea_id:task.id,color:col});
+    saveTB(b);toast("✓ Bloque creado");
+  }else{
+    const b=getTB();const blk=b.find(x=>x.id===_tbDrag.id);if(blk)blk.slot_inicio=slot;saveTB(b);
+  }
+  tbDE();renderTareas();
+}
+
+// ── HÁBITOS ─────────────────────────────────────────────────
+function habitoAplica(h,fecha){
+  if(h.frecuencia==="daily")return true;
+  if(h.frecuencia==="weekly"){const d=new Date(fecha+"T12:00").getDay();return d!==0&&d!==6;}
+  return true;
+}
+function calcStreak(hid,fecha){
+  let streak=0;let d=new Date(fecha+"T12:00");
+  while(true){
+    const ds=d.toISOString().slice(0,10);
+    const reg=store.habRegistros[ds]||{};
+    if(reg[hid])streak++;else break;
+    d.setDate(d.getDate()-1);if(streak>365)break;
+  }
+  return streak;
+}
+function toggleHabito(hid){
+  const td=state.habDate;
+  if(!store.habRegistros)store.habRegistros={};
+  if(!store.habRegistros[td])store.habRegistros[td]={};
+  store.habRegistros[td][hid]=!store.habRegistros[td][hid];
+  saveStore();renderHabitos();
+}
+function renderHabitos(){
+  const td=state.habDate;const reg=store.habRegistros[td]||{};
+  const habHoy=(store.habitos||[]).filter(h=>habitoAplica(h,td));
+  const done=habHoy.filter(h=>reg[h.id]).length;
+  const pct=habHoy.length?Math.round(done/habHoy.length*100):0;
+  document.getElementById("mainView").innerHTML=`
+    <div class="card">
+      <div class="section-header">
+        <h2 style="font-size:17px;color:#1F3864">💪 Hábitos</h2>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="date" value="${td}" style="padding:5px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:13px" onchange="state.habDate=this.value;renderHabitos()">
+          <button class="btn btn-primary" onclick="modalHabito()">+ Nuevo</button>
+        </div>
+      </div>
+      <div style="margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:#6B7280">${done}/${habHoy.length} completados hoy</span><span style="font-weight:700;color:#2E75B6">${pct}%</span></div>
+        <div class="progress-wrap"><div class="progress-fill" style="width:${pct}%;background:${pct>=100?"#10B981":pct>=60?"#2E75B6":"#F59E0B"}"></div></div>
+      </div>
+      ${habHoy.length===0?`<div class="empty">Sin hábitos para este día. <button class="btn btn-primary btn-sm" onclick="modalHabito()">Agregar primero</button></div>`:habHoy.map(h=>{
+        const done2=reg[h.id];const streak=calcStreak(h.id,td);
+        return`<div class="habito-row">
+          <button class="habito-check-btn ${done2?"done":""}" onclick="toggleHabito('${h.id}')">${done2?"✓":""}</button>
+          <div style="flex:1"><div class="habito-nombre">${esc(h.nombre)}</div><div style="display:flex;gap:6px;margin-top:3px">${catTag(h.categoria)}<span style="font-size:11px;color:#9CA3AF">${{daily:"Diario",weekly:"Días hábiles"}[h.frecuencia]||h.frecuencia}</span></div></div>
+          ${streak>1?`<span class="habito-streak"><span class="streak-flame">🔥</span> ${streak} días</span>`:""}
+          <button class="btn btn-danger btn-sm" onclick="delHabito('${h.id}')">🗑</button>
+        </div>`;}).join("")}
+      ${store.habitos?.length>0?`<div style="margin-top:16px;padding-top:14px;border-top:1px solid #E5E7EB"><h4 style="font-size:13px;color:#6B7280;margin-bottom:8px">Todos los hábitos (${store.habitos.length})</h4>${store.habitos.map(h=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #F3F4F6;font-size:13px"><span>${esc(h.nombre)}</span><button class="btn btn-secondary btn-sm" onclick="modalHabito('${h.id}')">✏️</button></div>`).join("")}</div>`:""}
+    </div>`;
+}
+function delHabito(id){if(!confirm("¿Eliminar hábito?"))return;store.habitos=store.habitos.filter(x=>x.id!==id);saveStore();toast("Hábito eliminado");renderHabitos();}
+function modalHabito(id){
+  const h=id?(store.habitos||[]).find(x=>x.id===id):null;
+  const catOpts=CATS.map(c=>`<option value="${c.k}" ${(h?.categoria||"salud")===c.k?"selected":""}>${c.l}</option>`).join("");
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box" style="max-width:420px">
+        <h3>${h?"Editar hábito":"Nuevo hábito"}</h3>
+        <div class="form-row"><label>Nombre *</label><input type="text" id="mhN" value="${esc(h?.nombre||"")}" placeholder="Ej: Meditar 10 min"></div>
+        <div class="form-2col">
+          <div class="form-row" style="margin:0"><label>Categoría</label><select id="mhC">${catOpts}</select></div>
+          <div class="form-row" style="margin:0"><label>Frecuencia</label><select id="mhF"><option value="daily" ${(h?.frecuencia||"daily")==="daily"?"selected":""}>Diario</option><option value="weekly" ${h?.frecuencia==="weekly"?"selected":""}>Días hábiles</option></select></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveHabito('${id||""}')">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+}
+function saveHabito(id){
+  const nom=document.getElementById("mhN")?.value?.trim();if(!nom){toast("El nombre es obligatorio");return;}
+  if(id){const h=(store.habitos||[]).find(x=>x.id===id);if(!h)return;h.nombre=nom;h.categoria=document.getElementById("mhC")?.value||"salud";h.frecuencia=document.getElementById("mhF")?.value||"daily";}
+  else{if(!store.habitos)store.habitos=[];store.habitos.push({id:newId("h"),nombre:nom,categoria:document.getElementById("mhC")?.value||"salud",frecuencia:document.getElementById("mhF")?.value||"daily",createdAt:Date.now()});}
+  saveStore();closeModal();toast("✓ Hábito guardado");renderHabitos();
+}
+
+// ── METAS ───────────────────────────────────────────────────
+function renderMetas(){
+  const metas=store.metas||[];
+  const activas=metas.filter(m=>m.estado!=="archivada");
+  document.getElementById("mainView").innerHTML=`
+    <div class="card">
+      <div class="section-header">
+        <h2 style="font-size:17px;color:#1F3864">🎯 Metas</h2>
+        <button class="btn btn-primary" onclick="modalMeta()">+ Nueva meta</button>
+      </div>
+      ${activas.length===0?`<div class="empty">Sin metas aún. ¡Empieza definiendo una!</div>`:activas.map(m=>`
+        <div class="meta-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <div>
+              <div class="meta-titulo">${esc(m.titulo)}</div>
+              ${m.desc?`<div style="font-size:12px;color:#6B7280;margin-top:2px">${esc(m.desc)}</div>`:""}
+              <div style="display:flex;gap:6px;margin-top:5px">${catTag(m.categoria)}${m.fecha_objetivo?`<span style="font-size:11px;color:#6B7280">📅 ${fmt(m.fecha_objetivo)}</span>`:""}</div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <span class="meta-prog-num">${m.progreso||0}%</span>
+              <button class="btn btn-secondary btn-sm" onclick="modalMeta('${m.id}')">✏️</button>
+            </div>
+          </div>
+          <div class="progress-wrap" style="margin-bottom:10px"><div class="progress-fill" style="width:${m.progreso||0}%;background:${(m.progreso||0)>=100?"#10B981":(m.progreso||0)>=50?"#2E75B6":"#F59E0B"}"></div></div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+            <input type="range" min="0" max="100" value="${m.progreso||0}" style="flex:1" oninput="updMeta('${m.id}','progreso',parseInt(this.value));this.nextElementSibling.textContent=this.value+'%'">
+            <span style="font-size:12px;min-width:32px;color:#6B7280">${m.progreso||0}%</span>
+          </div>
+          ${(m.hitos||[]).length>0?`<div>${(m.hitos||[]).map(h=>`<div class="hito-row"><input type="checkbox" class="hito-check" ${h.done?"checked":""} onchange="toggleHito('${m.id}','${h.id}')"><span class="${h.done?"hito-done":""}">${esc(h.texto)}</span></div>`).join("")}</div>`:""}
+          <div style="margin-top:8px;display:flex;gap:6px">
+            <input type="text" id="hito_${m.id}" placeholder="Agregar hito..." style="flex:1;padding:5px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:12px" onkeydown="if(event.key==='Enter')addHito('${m.id}')">
+            <button class="btn btn-secondary btn-sm" onclick="addHito('${m.id}')">+ Hito</button>
+          </div>
+        </div>`).join("")}
+    </div>`;
+}
+function updMeta(id,k,v){const m=(store.metas||[]).find(x=>x.id===id);if(!m)return;m[k]=v;saveStore();}
+function toggleHito(mid,hid){const m=(store.metas||[]).find(x=>x.id===mid);if(!m)return;const h=(m.hitos||[]).find(x=>x.id===hid);if(!h)return;h.done=!h.done;const done=m.hitos.filter(x=>x.done).length;m.progreso=m.hitos.length?Math.round(done/m.hitos.length*100):m.progreso;saveStore();renderMetas();}
+function addHito(mid){const inp=document.getElementById("hito_"+mid);if(!inp?.value?.trim())return;const m=(store.metas||[]).find(x=>x.id===mid);if(!m)return;if(!m.hitos)m.hitos=[];m.hitos.push({id:newId("h"),texto:inp.value.trim(),done:false});saveStore();renderMetas();}
+function modalMeta(id){
+  const m=id?(store.metas||[]).find(x=>x.id===id):null;
+  const catOpts=CATS.map(c=>`<option value="${c.k}" ${(m?.categoria||"personal")===c.k?"selected":""}>${c.l}</option>`).join("");
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box">
+        <h3>${m?"Editar meta":"Nueva meta"}</h3>
+        <div class="form-row"><label>Título *</label><input type="text" id="mmT" value="${esc(m?.titulo||"")}" placeholder="¿Qué querés lograr?"></div>
+        <div class="form-row"><label>Descripción</label><textarea id="mmD" style="min-height:60px">${esc(m?.desc||"")}</textarea></div>
+        <div class="form-3col">
+          <div class="form-row" style="margin:0"><label>Categoría</label><select id="mmC">${catOpts}</select></div>
+          <div class="form-row" style="margin:0"><label>Fecha objetivo</label><input type="date" id="mmF" value="${esc(m?.fecha_objetivo||"")}"></div>
+          <div class="form-row" style="margin:0"><label>Progreso inicial (%)</label><input type="number" id="mmP" min="0" max="100" value="${m?.progreso||0}"></div>
+        </div>
+        <div class="modal-footer">
+          ${m?`<button class="btn btn-danger btn-sm" onclick="delMeta('${id}');closeModal()">Eliminar</button>`:""}
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveMeta('${id||""}')">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+}
+function delMeta(id){store.metas=store.metas.filter(x=>x.id!==id);saveStore();toast("Meta eliminada");}
+function saveMeta(id){
+  const tit=document.getElementById("mmT")?.value?.trim();if(!tit){toast("El título es obligatorio");return;}
+  const data={titulo:tit,desc:document.getElementById("mmD")?.value?.trim()||"",categoria:document.getElementById("mmC")?.value||"personal",fecha_objetivo:document.getElementById("mmF")?.value||"",progreso:parseInt(document.getElementById("mmP")?.value||"0"),estado:"activa"};
+  if(id){const m=(store.metas||[]).find(x=>x.id===id);if(!m)return;Object.assign(m,data);}
+  else{if(!store.metas)store.metas=[];store.metas.unshift({id:newId("m"),hitos:[],createdAt:Date.now(),...data});}
+  saveStore();closeModal();toast("✓ Meta guardada");renderMetas();
+}
+
+// ── DIARIO ──────────────────────────────────────────────────
+function abrirDiarioHoy(){state.view="diario";render();setTimeout(()=>modalDiario(today()),50);}
+function renderDiario(){
+  const entradas=[...(store.diario||[])].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const filtradas=state.diarioBusca?entradas.filter(e=>e.contenido.toLowerCase().includes(state.diarioBusca.toLowerCase())||e.fecha.includes(state.diarioBusca)):entradas;
+  document.getElementById("mainView").innerHTML=`
+    <div class="card">
+      <div class="section-header">
+        <h2 style="font-size:17px;color:#1F3864">📓 Diario personal</h2>
+        <div style="display:flex;gap:8px">
+          <input type="text" placeholder="Buscar..." value="${esc(state.diarioBusca)}" style="padding:6px 10px;border:1px solid #D1D5DB;border-radius:7px;font-size:13px;max-width:180px" oninput="state.diarioBusca=this.value;renderDiario()">
+          <button class="btn btn-primary" onclick="modalDiario()">+ Entrada</button>
+        </div>
+      </div>
+      ${filtradas.length===0?`<div class="empty">Sin entradas${state.diarioBusca?" para esta búsqueda":". Empieza a escribir hoy 📝"}</div>`:
+        filtradas.map(e=>{const mood=MOODS.find(m=>m.k===e.mood);return`<div class="diario-entry" onclick="modalDiario('${e.id}')">
+          <div class="diario-fecha"><strong>${fmtFull(e.fecha)}</strong>${mood?`<span>${mood.e} ${mood.k}</span>`:""}</div>
+          <div class="diario-preview">${esc(e.contenido)}</div>
+        </div>`;}).join("")}
+    </div>`;
+}
+function modalDiario(id){
+  const isId=id&&id!==today();const e=isId?(store.diario||[]).find(x=>x.id===id):null;
+  const fecha=e?.fecha||(id===today()?id:today());
+  const moodBtns=MOODS.map(m=>`<button type="button" class="mood-btn ${(e?.mood||"bien")===m.k?"active":""}" onclick="this.closest('.modal-box').querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('active'));this.classList.add('active');this.dataset.mood='${m.k}'" data-mood="${m.k}" title="${m.k}">${m.e}</button>`).join("");
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box" style="max-width:600px">
+        <h3>${e?"Editar entrada":"Nueva entrada"}</h3>
+        <div class="form-2col" style="margin-bottom:10px">
+          <div class="form-row" style="margin:0"><label>Fecha</label><input type="date" id="mdF" value="${esc(fecha)}"></div>
+          <div class="form-row" style="margin:0"><label>¿Cómo estuvo el día?</label><div style="display:flex;gap:6px;margin-top:4px">${moodBtns}</div></div>
+        </div>
+        <div class="form-row"><label>¿Qué pasó hoy? ¿Qué pensaste?</label><textarea id="mdC" style="min-height:200px;font-size:14px;line-height:1.7">${esc(e?.contenido||"")}</textarea></div>
+        <div class="modal-footer">
+          ${e?`<button class="btn btn-danger btn-sm" onclick="delDiario('${e.id}');closeModal()">Eliminar</button>`:""}
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveDiario('${e?.id||""}')">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+  setTimeout(()=>document.getElementById("mdC")?.focus(),60);
+}
+function saveDiario(id){
+  const cont=document.getElementById("mdC")?.value?.trim();if(!cont){toast("Escribe algo primero");return;}
+  const fecha=document.getElementById("mdF")?.value||today();
+  const mood=document.querySelector(".mood-btn.active")?.dataset?.mood||"bien";
+  if(id){const e=(store.diario||[]).find(x=>x.id===id);if(!e)return;e.contenido=cont;e.fecha=fecha;e.mood=mood;e.updatedAt=Date.now();}
+  else{if(!store.diario)store.diario=[];store.diario.push({id:newId("d"),fecha,contenido:cont,mood,createdAt:Date.now()});}
+  saveStore();closeModal();toast("✓ Entrada guardada");renderDiario();
+}
+function delDiario(id){store.diario=store.diario.filter(x=>x.id!==id);saveStore();toast("Entrada eliminada");}
+
+// ── GMAIL OAUTH ─────────────────────────────────────────────
+// INSTRUCCIONES DE CONFIGURACIÓN:
+// 1. Ve a https://console.cloud.google.com
+// 2. Crea un proyecto → habilita Gmail API
+// 3. Crea credenciales OAuth 2.0 (tipo: aplicación web)
+// 4. En "Orígenes autorizados" pon la URL donde usas este archivo
+// 5. Reemplaza GMAIL_CLIENT_ID abajo con tu Client ID
+const GMAIL_CLIENT_ID = "TU_CLIENT_ID_AQUI.apps.googleusercontent.com";
+const GMAIL_SCOPE = "https://www.googleapis.com/auth/gmail.readonly";
+let gmailToken = localStorage.getItem("gmail_token") || null;
+let gmailTokenExp = parseInt(localStorage.getItem("gmail_token_exp") || "0");
+
+function gmailTokenValido() {
+  return gmailToken && Date.now() < gmailTokenExp;
+}
+
+function gmailLogin() {
+  return new Promise((resolve, reject) => {
+    if (GMAIL_CLIENT_ID === "TU_CLIENT_ID_AQUI.apps.googleusercontent.com") {
+      reject(new Error("CONFIGURAR_CLIENT_ID"));
+      return;
+    }
+    const params = new URLSearchParams({
+      client_id: GMAIL_CLIENT_ID,
+      redirect_uri: window.location.href.split("?")[0],
+      response_type: "token",
+      scope: GMAIL_SCOPE,
+      prompt: "consent"
+    });
+    const popup = window.open("https://accounts.google.com/o/oauth2/v2/auth?" + params.toString(), "gmailOAuth", "width=500,height=600");
+    if (!popup) { reject(new Error("POPUP_BLOQUEADO")); return; }
+    const interval = setInterval(() => {
+      try {
+        if (popup.closed) { clearInterval(interval); reject(new Error("POPUP_CERRADO")); return; }
+        const url = popup.location.href;
+        if (url.includes("access_token=")) {
+          clearInterval(interval);
+          popup.close();
+          const hash = new URLSearchParams(popup.location.hash.slice(1));
+          const token = hash.get("access_token");
+          const expiresIn = parseInt(hash.get("expires_in") || "3600") * 1000;
+          gmailToken = token;
+          gmailTokenExp = Date.now() + expiresIn - 60000;
+          localStorage.setItem("gmail_token", gmailToken);
+          localStorage.setItem("gmail_token_exp", gmailTokenExp.toString());
+          resolve(token);
+        }
+      } catch (e) { /* cross-origin, esperar */ }
+    }, 300);
+  });
+}
+
+function gmailLogout() {
+  gmailToken = null; gmailTokenExp = 0;
+  localStorage.removeItem("gmail_token");
+  localStorage.removeItem("gmail_token_exp");
+  toast("Gmail desconectado");
+  renderFinanzas();
+}
+
+async function gmailFetch(url) {
+  const r = await fetch(url, { headers: { Authorization: "Bearer " + gmailToken } });
+  if (r.status === 401) { gmailToken = null; localStorage.removeItem("gmail_token"); throw new Error("TOKEN_EXPIRADO"); }
+  return r.json();
+}
+
+// ── EXTRACCIÓN CON IA ────────────────────────────────────────
+async function extraerMovimientosConIA(textos) {
+  const FIN_CATS_STR = FIN_CATS.join(", ");
+  const prompt = `Eres un asistente financiero. Analiza estos correos de BancoEstado Chile y extrae SOLO los movimientos de dinero reales (cargos, compras, abonos, transferencias). 
+
+Correos a analizar:
+${textos.map((t, i) => `--- CORREO ${i + 1} ---\n${t}`).join("\n\n")}
+
+Categorías disponibles: ${FIN_CATS_STR}
+
+Responde SOLO con JSON válido, sin texto adicional, sin markdown. Formato:
+{"movimientos":[{"descripcion":"nombre comercio o concepto","monto":12990,"tipo":"gasto","categoria":"Alimentación","fecha":"2025-05-20","fuente":"correo"}]}
+
+Reglas:
+- monto siempre positivo (número entero en CLP)
+- tipo: "gasto" para compras/cargos/débitos, "ingreso" para abonos/depósitos
+- fecha formato YYYY-MM-DD, si no hay fecha usa hoy: ${today()}
+- Si el correo no tiene movimiento de dinero claro, no lo incluyas
+- No inventes datos, solo extrae lo que está explícito`;
+
+  const resp = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }]
+    })
+  });
+  const data = await resp.json();
+  const text = data.content?.map(b => b.text || "").join("") || "";
+  const clean = text.replace(/```json|```/g, "").trim();
+  const parsed = JSON.parse(clean);
+  return parsed.movimientos || [];
+}
+
+// ── SINCRONIZACIÓN GMAIL ─────────────────────────────────────
+async function sincronizarGmail() {
+  // Mostrar estado en botón
+  const btn = document.getElementById("btnSincGmail");
+  if (btn) { btn.disabled = true; btn.textContent = "⏳ Conectando..."; }
+
+  try {
+    // Login si no hay token
+    if (!gmailTokenValido()) {
+      if (btn) btn.textContent = "⏳ Autorizando...";
+      await gmailLogin();
+    }
+
+    if (btn) btn.textContent = "⏳ Buscando correos...";
+
+    // Buscar correos de BancoEstado (últimos 30 días)
+    const after = Math.floor((Date.now() - 30 * 24 * 3600 * 1000) / 1000);
+    const query = encodeURIComponent(`from:(bancoestado OR notificaciones@bancoestado.cl OR alertas@bancoestado.cl) after:${after}`);
+    const listData = await gmailFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${query}&maxResults=30`);
+
+    if (!listData.messages || listData.messages.length === 0) {
+      toast("No se encontraron correos de BancoEstado en los últimos 30 días");
+      if (btn) { btn.disabled = false; btn.textContent = "📧 Sincronizar Gmail"; }
+      return;
+    }
+
+    if (btn) btn.textContent = `⏳ Leyendo ${listData.messages.length} correos...`;
+
+    // Obtener IDs ya procesados
+    const procesados = new Set((store.gmailProcesados || []));
+
+    // Filtrar solo los nuevos
+    const nuevos = listData.messages.filter(m => !procesados.has(m.id));
+    if (nuevos.length === 0) {
+      toast("✓ Todo al día, sin correos nuevos de BancoEstado");
+      if (btn) { btn.disabled = false; btn.textContent = "📧 Sincronizar Gmail"; }
+      renderFinanzas();
+      return;
+    }
+
+    // Leer contenido de hasta 20 correos nuevos
+    const textos = [];
+    const idsLeidos = [];
+    for (const msg of nuevos.slice(0, 20)) {
+      try {
+        const detail = await gmailFetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=full`);
+        const texto = extraerTextoEmail(detail);
+        if (texto) { textos.push(texto); idsLeidos.push(msg.id); }
+      } catch (e) { /* ignorar errores individuales */ }
+    }
+
+    if (textos.length === 0) {
+      toast("No se pudo leer el contenido de los correos");
+      if (btn) { btn.disabled = false; btn.textContent = "📧 Sincronizar Gmail"; }
+      return;
+    }
+
+    if (btn) btn.textContent = "🤖 Analizando con IA...";
+
+    // Procesar en lotes de 5
+    let todosMovimientos = [];
+    for (let i = 0; i < textos.length; i += 5) {
+      const lote = textos.slice(i, i + 5);
+      const movs = await extraerMovimientosConIA(lote);
+      todosMovimientos = todosMovimientos.concat(movs);
+    }
+
+    if (todosMovimientos.length === 0) {
+      toast("IA no encontró movimientos en los correos");
+      // Igual marcar como procesados
+      store.gmailProcesados = [...procesados, ...idsLeidos];
+      saveStore();
+      if (btn) { btn.disabled = false; btn.textContent = "📧 Sincronizar Gmail"; }
+      return;
+    }
+
+    // Mostrar preview para confirmar
+    mostrarPreviewMovimientos(todosMovimientos, idsLeidos);
+
+  } catch (err) {
+    if (btn) { btn.disabled = false; btn.textContent = "📧 Sincronizar Gmail"; }
+    if (err.message === "CONFIGURAR_CLIENT_ID") {
+      mostrarConfigGmail();
+    } else if (err.message === "POPUP_BLOQUEADO") {
+      toast("⚠️ Permite ventanas emergentes para autorizar Gmail");
+    } else if (err.message === "TOKEN_EXPIRADO") {
+      gmailToken = null;
+      toast("Sesión expirada, intenta de nuevo");
+    } else {
+      console.error(err);
+      toast("Error al sincronizar: " + err.message);
+    }
+  }
+}
+
+function extraerTextoEmail(detail) {
+  // Extraer texto plano del payload
+  const partes = [];
+  function recorrer(payload) {
+    if (!payload) return;
+    if (payload.body?.data) {
+      try {
+        const decoded = atob(payload.body.data.replace(/-/g, "+").replace(/_/g, "/"));
+        partes.push(decoded);
+      } catch (e) {}
+    }
+    if (payload.parts) payload.parts.forEach(recorrer);
+  }
+  recorrer(detail.payload);
+  // También incluir subject y from del encabezado
+  const headers = detail.payload?.headers || [];
+  const subject = headers.find(h => h.name === "Subject")?.value || "";
+  const from = headers.find(h => h.name === "From")?.value || "";
+  const fecha = headers.find(h => h.name === "Date")?.value || "";
+  return `Asunto: ${subject}\nDe: ${from}\nFecha: ${fecha}\n${partes.join("\n")}`.slice(0, 3000);
+}
+
+function mostrarPreviewMovimientos(movimientos, idsLeidos) {
+  const catOpts = FIN_CATS.map(c => `<option value="${c}">${c}</option>`).join("");
+  document.getElementById("modalRoot").innerHTML = `
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box" style="max-width:580px">
+        <h3>🤖 IA encontró ${movimientos.length} movimiento(s)</h3>
+        <p style="font-size:12px;color:#6B7280;margin-bottom:14px">Revisa y ajusta antes de importar. Desmarca los que no quieras guardar.</p>
+        <div id="prevMovs" style="max-height:50vh;overflow-y:auto">
+          ${movimientos.map((m, i) => `
+            <div style="border:1px solid #E5E7EB;border-radius:8px;padding:10px 12px;margin-bottom:8px;background:${m.tipo==="ingreso"?"#F0FDF4":"#FFF1F2"}">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <input type="checkbox" id="chk_${i}" checked style="width:15px;height:15px;accent-color:#10B981">
+                <span style="font-size:13px;font-weight:600;flex:1">${esc(m.descripcion)}</span>
+                <span style="font-weight:700;color:${m.tipo==="ingreso"?"#059669":"#DC2626"}">${m.tipo==="ingreso"?"+":"-"}$${Number(m.monto).toLocaleString("es-CL")}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+                <div><label style="font-size:10px">Tipo</label>
+                  <select id="tipo_${i}" style="width:100%;padding:4px 6px;border:1px solid #D1D5DB;border-radius:5px;font-size:12px">
+                    <option value="gasto" ${m.tipo==="gasto"?"selected":""}>❤️ Gasto</option>
+                    <option value="ingreso" ${m.tipo==="ingreso"?"selected":""}>💚 Ingreso</option>
+                  </select>
+                </div>
+                <div><label style="font-size:10px">Categoría</label>
+                  <select id="cat_${i}" style="width:100%;padding:4px 6px;border:1px solid #D1D5DB;border-radius:5px;font-size:12px">
+                    ${FIN_CATS.map(c=>`<option value="${c}" ${m.categoria===c?"selected":""}>${c}</option>`).join("")}
+                  </select>
+                </div>
+                <div><label style="font-size:10px">Fecha</label>
+                  <input type="date" id="fecha_${i}" value="${m.fecha||today()}" style="width:100%;padding:4px 6px;border:1px solid #D1D5DB;border-radius:5px;font-size:12px">
+                </div>
+              </div>
+            </div>`).join("")}
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-success" onclick="confirmarImportacion(${JSON.stringify(movimientos).replace(/</g,"\\u003c")},${JSON.stringify(idsLeidos).replace(/</g,"\\u003c")},${movimientos.length})">
+            ✓ Importar seleccionados
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function confirmarImportacion(movimientos, idsLeidos, total) {
+  if (!store.finanzas) store.finanzas = [];
+  if (!store.gmailProcesados) store.gmailProcesados = [];
+  let importados = 0;
+  for (let i = 0; i < total; i++) {
+    const chk = document.getElementById("chk_" + i);
+    if (!chk?.checked) continue;
+    const m = movimientos[i];
+    store.finanzas.push({
+      id: newId("f"),
+      tipo: document.getElementById("tipo_" + i)?.value || m.tipo,
+      monto: Number(m.monto),
+      categoria: document.getElementById("cat_" + i)?.value || m.categoria,
+      fecha: document.getElementById("fecha_" + i)?.value || m.fecha || today(),
+      descripcion: m.descripcion || "",
+      fuente: "gmail",
+      createdAt: Date.now()
+    });
+    importados++;
+  }
+  // Marcar correos como procesados
+  store.gmailProcesados = [...new Set([...(store.gmailProcesados || []), ...idsLeidos])];
+  // Mantener solo los últimos 500 IDs
+  if (store.gmailProcesados.length > 500) store.gmailProcesados = store.gmailProcesados.slice(-500);
+  saveStore();
+  closeModal();
+  toast(`✓ ${importados} movimiento(s) importados desde Gmail`);
+  renderFinanzas();
+}
+
+function mostrarConfigGmail() {
+  document.getElementById("modalRoot").innerHTML = `
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box" style="max-width:500px">
+        <h3>⚙️ Configurar Gmail</h3>
+        <p style="font-size:13px;color:#374151;margin-bottom:12px">Para activar la sincronización automática necesitas configurar un Client ID de Google:</p>
+        <ol style="font-size:13px;color:#374151;line-height:2;padding-left:18px;margin-bottom:14px">
+          <li>Ve a <a href="https://console.cloud.google.com" target="_blank" style="color:#2E75B6">console.cloud.google.com</a></li>
+          <li>Crea un proyecto nuevo</li>
+          <li>Habilita la <strong>Gmail API</strong></li>
+          <li>Crea credenciales → OAuth 2.0 → Aplicación web</li>
+          <li>Agrega tu URL como origen autorizado</li>
+          <li>Copia el <strong>Client ID</strong></li>
+        </ol>
+        <div class="form-row">
+          <label>Pega tu Client ID aquí:</label>
+          <input type="text" id="inputClientId" placeholder="xxxxx.apps.googleusercontent.com" style="font-size:12px;font-family:monospace">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="guardarClientId()">Guardar y conectar</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function guardarClientId() {
+  const val = document.getElementById("inputClientId")?.value?.trim();
+  if (!val || !val.includes(".apps.googleusercontent.com")) { toast("Client ID inválido"); return; }
+  localStorage.setItem("gmail_client_id_custom", val);
+  // Reemplazar en memoria
+  window.GMAIL_CLIENT_ID_RUNTIME = val;
+  closeModal();
+  toast("✓ Client ID guardado, intenta sincronizar de nuevo");
+}
+
+// Cargar client ID guardado si existe
+(function(){
+  const saved = localStorage.getItem("gmail_client_id_custom");
+  if (saved) window.GMAIL_CLIENT_ID_RUNTIME = saved;
+})();
+
+// Override para usar el runtime si está disponible
+const _origSinc = sincronizarGmail;
+
+// ── FINANZAS ────────────────────────────────────────────────
+const FIN_CATS=["Sueldo","Freelance","IDtifika Pets","GT Industries","Inversión","Arriendo","Alimentación","Transporte","Salud","Educación","Hogar","Entretenimiento","Ropa","Tecnología","Otro"];
+function renderFinanzas(){
+  const mes=state.finMes;
+  const movs=[...(store.finanzas||[])].filter(m=>m.fecha&&m.fecha.startsWith(mes)).sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  const ing=movs.filter(m=>m.tipo==="ingreso").reduce((a,m)=>a+Number(m.monto),0);
+  const gas=movs.filter(m=>m.tipo==="gasto").reduce((a,m)=>a+Number(m.monto),0);
+  const bal=ing-gas;
+  const xCat={};movs.filter(m=>m.tipo==="gasto").forEach(m=>{xCat[m.categoria]=(xCat[m.categoria]||0)+Number(m.monto);});
+  const topCats=Object.entries(xCat).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const gmailConectado=gmailTokenValido();
+  const clientIdOk = (window.GMAIL_CLIENT_ID_RUNTIME || GMAIL_CLIENT_ID) !== "TU_CLIENT_ID_AQUI.apps.googleusercontent.com";
+  document.getElementById("mainView").innerHTML=`
+    <div class="card">
+      <div class="section-header">
+        <h2 style="font-size:17px;color:#1F3864">💰 Finanzas personales</h2>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <input type="month" value="${mes}" style="padding:6px 8px;border:1px solid #D1D5DB;border-radius:6px;font-size:13px" onchange="state.finMes=this.value;renderFinanzas()">
+          <button class="btn btn-primary" onclick="modalFin()">+ Movimiento</button>
+        </div>
+      </div>
+      <!-- BANNER GMAIL -->
+      <div style="background:${gmailConectado?"#F0FDF4":"#EFF6FF"};border:1px solid ${gmailConectado?"#86EFAC":"#BFDBFE"};border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span style="font-size:20px">${gmailConectado?"✅":"📧"}</span>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:${gmailConectado?"#065F46":"#1E3A8A"}">${gmailConectado?"Gmail conectado":"Sincronizar con Gmail"}</div>
+          <div style="font-size:11px;color:#6B7280">${gmailConectado?"Importa automáticamente tus movimientos de BancoEstado":"Conecta Gmail para importar correos de BancoEstado automáticamente"}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button id="btnSincGmail" class="btn btn-primary btn-sm" onclick="sincronizarGmail()">
+            ${gmailConectado?"🔄 Sincronizar ahora":"📧 Conectar Gmail"}
+          </button>
+          ${gmailConectado?`<button class="btn btn-secondary btn-sm" onclick="gmailLogout()">Desconectar</button>`:`<button class="btn btn-secondary btn-sm" onclick="mostrarConfigGmail()">⚙️ Configurar</button>`}
+        </div>
+      </div>
+      <div class="grid3" style="margin-bottom:16px">
+        <div class="fin-stat"><div class="fin-stat-val fin-ingreso">+$${ing.toLocaleString("es-CL")}</div><div class="fin-stat-lbl">Ingresos</div></div>
+        <div class="fin-stat"><div class="fin-stat-val fin-gasto">-$${gas.toLocaleString("es-CL")}</div><div class="fin-stat-lbl">Gastos</div></div>
+        <div class="fin-stat"><div class="fin-stat-val" style="color:${bal>=0?"#059669":"#DC2626"}">${bal>=0?"+":""} $${bal.toLocaleString("es-CL")}</div><div class="fin-stat-lbl">Balance</div></div>
+      </div>
+      ${topCats.length>0?`<div style="margin-bottom:16px"><div style="font-size:12px;font-weight:700;color:#6B7280;margin-bottom:8px">TOP GASTOS</div>${topCats.map(([cat,val])=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:12px;min-width:120px">${esc(cat)}</span><div style="flex:1;background:#F3F4F6;border-radius:5px;height:7px;overflow:hidden"><div style="width:${Math.round(val/gas*100)}%;height:100%;background:#EF4444;border-radius:5px"></div></div><span style="font-size:12px;color:#DC2626;font-weight:600;min-width:80px;text-align:right">$${val.toLocaleString("es-CL")}</span></div>`).join("")}</div>`:""}
+      <div style="border:1px solid #E5E7EB;border-radius:9px;overflow:hidden">
+        ${movs.length===0?`<div class="empty">Sin movimientos este mes</div>`:movs.map(m=>`
+          <div class="fin-row">
+            <div><div style="font-size:13px;font-weight:600">${esc(m.descripcion||m.categoria)}${m.fuente==="gmail"?` <span style="font-size:10px;color:#2E75B6;font-weight:600">📧 Gmail</span>`:""}</div><div style="font-size:11px;color:#9CA3AF">${fmt(m.fecha)} · ${esc(m.categoria)}</div></div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span class="${m.tipo==="ingreso"?"fin-ingreso":"fin-gasto"}">${m.tipo==="ingreso"?"+":"-"}$${Number(m.monto).toLocaleString("es-CL")}</span>
+              <button class="btn btn-danger btn-sm" onclick="delFin('${m.id}')">✕</button>
+            </div>
+          </div>`).join("")}
+      </div>
+    </div>`;
+}
+function delFin(id){store.finanzas=store.finanzas.filter(x=>x.id!==id);saveStore();toast("Eliminado");renderFinanzas();}
+function modalFin(){
+  const catOpts=FIN_CATS.map(c=>`<option value="${c}">${c}</option>`).join("");
+  document.getElementById("modalRoot").innerHTML=`
+    <div class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+      <div class="modal-box" style="max-width:440px">
+        <h3>💰 Nuevo movimiento</h3>
+        <div class="form-2col">
+          <div class="form-row" style="margin:0"><label>Tipo</label><select id="mfTi"><option value="ingreso">💚 Ingreso</option><option value="gasto">❤️ Gasto</option></select></div>
+          <div class="form-row" style="margin:0"><label>Monto ($)</label><input type="number" id="mfM" placeholder="Ej: 50000" min="0"></div>
+        </div>
+        <div class="form-2col" style="margin-top:10px">
+          <div class="form-row" style="margin:0"><label>Categoría</label><select id="mfC">${catOpts}</select></div>
+          <div class="form-row" style="margin:0"><label>Fecha</label><input type="date" id="mfF" value="${today()}"></div>
+        </div>
+        <div class="form-row" style="margin-top:10px"><label>Descripción (opcional)</label><input type="text" id="mfD" placeholder="Ej: Honorarios proyecto X"></div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-primary" onclick="saveFin()">Guardar</button>
+        </div>
+      </div>
+    </div>`;
+}
+function saveFin(){
+  const monto=parseFloat(document.getElementById("mfM")?.value||"");if(!monto||monto<=0){toast("Ingresa un monto válido");return;}
+  if(!store.finanzas)store.finanzas=[];
+  store.finanzas.push({id:newId("f"),tipo:document.getElementById("mfTi")?.value||"gasto",monto,categoria:document.getElementById("mfC")?.value||"Otro",fecha:document.getElementById("mfF")?.value||today(),descripcion:document.getElementById("mfD")?.value?.trim()||"",createdAt:Date.now()});
+  saveStore();closeModal();toast("✓ Movimiento guardado");renderFinanzas();
+}
+
+// ── BACKUP ──────────────────────────────────────────────────
+function exportar(){
+  const d=new Date().toISOString().slice(0,10);
+  const blob=new Blob([JSON.stringify(store,null,2)],{type:"application/json;charset=utf-8"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");
+  a.href=url;a.download=`respaldo_personal_${d}.json`;a.click();URL.revokeObjectURL(url);toast("✓ Respaldo descargado");
+}
+function importar(e){
+  const file=e.target.files?.[0];e.target.value="";if(!file)return;
+  const r=new FileReader();r.onload=ev=>{
+    try{const p=JSON.parse(ev.target.result);
+      if(!p.tareas&&!p.habitos&&!p.diario){alert("Archivo no reconocido");return;}
+      if(!confirm(`¿Cargar este respaldo? Se reemplazarán todos los datos actuales.`))return;
+      store=p;if(!store.tareas)store.tareas=[];if(!store.habitos)store.habitos=[];if(!store.habRegistros)store.habRegistros={};if(!store.metas)store.metas=[];if(!store.diario)store.diario=[];if(!store.finanzas)store.finanzas=[];if(!store.timeblocks)store.timeblocks={};
+      saveStore();toast(`✓ Datos cargados`);render();
+    }catch(err){alert("Error al leer el archivo");}
+  };r.readAsText(file,"utf-8");
+}
+
+// ── RENDER ──────────────────────────────────────────────────
+function render(){
+  renderNav();
+  const v=state.view;
+  if(v==="dashboard")renderDashboard();
+  else if(v==="tareas")renderTareas();
+  else if(v==="habitos")renderHabitos();
+  else if(v==="metas")renderMetas();
+  else if(v==="diario")renderDiario();
+  else if(v==="finanzas")renderFinanzas();
+}
+render();
+</script>
+</body>
+</html>
