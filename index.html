@@ -183,7 +183,47 @@ const BLOCK_COLORS={
   gris:{bg:"#F9FAFB",bd:"#9CA3AF",tx:"#374151"},
 };
 
+// ── FIREBASE ─────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyCVy-iiUK4sHlFBf1yig9wEdOpzybCRz8o",
+  authDomain: "mi-proyecto-81577.firebaseapp.com",
+  projectId: "mi-proyecto-81577",
+  storageBucket: "mi-proyecto-81577.firebasestorage.app",
+  messagingSenderId: "924193858988",
+  appId: "1:924193858988:web:e87e64c785c5691eaf8609"
+};
+// Carga Firebase desde CDN
+const _fbScript1 = document.createElement("script");
+_fbScript1.src = "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js";
+document.head.appendChild(_fbScript1);
+const _fbScript2 = document.createElement("script");
+_fbScript2.src = "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js";
+document.head.appendChild(_fbScript2);
+
+let db = null;
+let fbReady = false;
+let saveTimeout = null;
+const FB_DOC = "matias"; // ID del documento en Firestore
+
+function initFirebase() {
+  return new Promise((resolve) => {
+    function tryInit() {
+      if (typeof firebase !== "undefined" && firebase.firestore) {
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        fbReady = true;
+        resolve(true);
+      } else {
+        setTimeout(tryInit, 100);
+      }
+    }
+    tryInit();
+  });
+}
+
 // ── STORE ───────────────────────────────────────────────────
+function defStore(){return{tareas:[],habitos:[],habRegistros:{},metas:[],diario:[],finanzas:[],timeblocks:{},gmailProcesados:[]};}
+
 function loadStore(){
   try{
     const r=localStorage.getItem(STORAGE_KEY);
@@ -196,11 +236,69 @@ function loadStore(){
     if(!p.diario)p.diario=[];
     if(!p.finanzas)p.finanzas=[];
     if(!p.timeblocks)p.timeblocks={};
+    if(!p.gmailProcesados)p.gmailProcesados=[];
     return p;
   }catch(e){return defStore();}
 }
-function defStore(){return{tareas:[],habitos:[],habRegistros:{},metas:[],diario:[],finanzas:[],timeblocks:{}};}
-function saveStore(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(store));}catch(e){alert("Error guardando");}}
+
+// saveStore: guarda en localStorage inmediato + Firebase con debounce
+function saveStore(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(store));}catch(e){}
+  if(!fbReady||!db)return;
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(async ()=>{
+    try{
+      await db.collection("usuarios").doc(FB_DOC).set(store);
+    }catch(e){console.warn("Firebase save error:",e);}
+  }, 800);
+}
+
+// Carga datos desde Firebase al iniciar (tiene prioridad sobre localStorage)
+async function syncFromFirebase(){
+  if(!fbReady||!db)return;
+  try{
+    showSyncBanner("☁️ Sincronizando...");
+    const doc = await db.collection("usuarios").doc(FB_DOC).get();
+    if(doc.exists){
+      const data = doc.data();
+      if(!data.tareas)data.tareas=[];
+      if(!data.habitos)data.habitos=[];
+      if(!data.habRegistros)data.habRegistros={};
+      if(!data.metas)data.metas=[];
+      if(!data.diario)data.diario=[];
+      if(!data.finanzas)data.finanzas=[];
+      if(!data.timeblocks)data.timeblocks={};
+      if(!data.gmailProcesados)data.gmailProcesados=[];
+      store = data;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+    } else {
+      // Primera vez: subir datos locales a Firebase
+      await db.collection("usuarios").doc(FB_DOC).set(store);
+    }
+    hideSyncBanner();
+    render();
+  }catch(e){
+    console.warn("Firebase sync error:",e);
+    hideSyncBanner();
+  }
+}
+
+function showSyncBanner(msg){
+  let b = document.getElementById("syncBanner");
+  if(!b){
+    b = document.createElement("div");
+    b.id = "syncBanner";
+    b.style.cssText="position:fixed;bottom:16px;right:16px;background:#1F3864;color:white;padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:9999;display:flex;align-items:center;gap:6px";
+    document.body.appendChild(b);
+  }
+  b.textContent = msg;
+  b.style.display = "flex";
+}
+function hideSyncBanner(){
+  const b = document.getElementById("syncBanner");
+  if(b) b.style.display = "none";
+}
+
 let store=loadStore();
 function newId(p="i"){return p+"_"+Date.now().toString(36)+Math.random().toString(36).slice(2,5);}
 
@@ -1229,7 +1327,11 @@ function render(){
   else if(v==="diario")renderDiario();
   else if(v==="finanzas")renderFinanzas();
 }
+// Arrancar app con datos locales primero, luego sincronizar Firebase
 render();
+initFirebase().then(()=>{
+  syncFromFirebase();
+});
 </script>
 </body>
 </html>
